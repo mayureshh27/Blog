@@ -14,15 +14,15 @@ const app = express(); // Initialize the express app
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
   credentials: true
-}))//cross origin resorce sharing
+}))//cross-origin resource sharing
 
 app.use(express.json()); // parsing json files
 
 app.use(cookieParser()); // parsing the cookie
 
 app.use('/user', userRoute);
-// app.use('/post', postRoute);
-// app.use('/comment', commentRoute);
+app.use('/post', postRoute);
+app.use('/comment', commentRoute);
 
 //error handler // express 5 version features 
 app.use((error, res, req, next) => {

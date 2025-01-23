@@ -4,11 +4,18 @@ const DB_NAME = "blog"
 
 const connectDB = async () => {
   try {
-    const connectionInstance = await mongoose.connect(`${process.env.NODE_ENV_MONGOOSE_URL}/${DB_NAME}`)
-    console.log(`\n MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`);
+    const conn = mongoose.connection;
+    conn.on('connected', () => {
+      console.log('Connected to MongoDB Atlas Server');
+    });
+    conn.on('error', (error) => {
+      console.error('Error connecting to MongoDB Atlas Server:', error);
+    });
+    await mongoose.connect(process.env.NODE_ENV_MONGOOSE_URL);
+
   } catch (error) {
-    console.log("MONGODB connection FAILED ", error);
-    process.exit(1)
+    console.error('Error connecting to MongoDB Atlas Server:', error);
+    process.exit(1); // Exit the process if the database connection fails
   }
 }
 

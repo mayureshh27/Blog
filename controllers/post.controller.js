@@ -3,6 +3,7 @@ import Post from "../models/post.model.js"
 import User from "../models/user.model.js";
 import dotenv from "dotenv"
 dotenv.config();
+
 export const createPost = async (req, res) => {
     try {
 
@@ -29,6 +30,7 @@ export const createPost = async (req, res) => {
         // Create a new post with the user's ID and the request body
         const newPost = new Post({
             user: req.user._id,
+            slug: slug,
             // Attach the user ID to the post
             ...req.body, // Spread other fields from the request body
         });

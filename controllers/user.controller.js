@@ -1,7 +1,6 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendVerificationEmail } from "../helpers/sendVerificationemail.js";
 
 export const signup = async (req, res) => {
     try {
@@ -45,7 +44,6 @@ export const signup = async (req, res) => {
 
         // Save user to the database
         await newUser.save();
-        await sendVerificationEmail(email, emailToken)//send verification email 
 
 
         res.status(201).json({
@@ -77,10 +75,6 @@ export const signin = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Check if the user is verified
-        if (!user.isVerified) {
-            return res.status(403).json({ message: "User is not verified, please verify your email and then login" });
-        }
 
         // Check if the password is correct
         const isMatch = bcryptjs.compare(password, user.password);
@@ -112,6 +106,24 @@ export const signin = async (req, res) => {
     } catch (error) {
         console.error("Error:", error.message);
         res.status(500).json({ message: "Error in Login." });
+    }
+};
+
+export const logout = async (req, res) => {
+    try {
+        // Clear the token cookie
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
+
+        res.status(200).json({
+            message: "Logout successful",
+        });
+    } catch (error) {
+        console.error("Error during logout:", error.message);
+        res.status(500).json({ message: "Error logging out" });
     }
 };
 
