@@ -9,9 +9,6 @@ const userSchema = new Schema(
             required: true,
             unique: true,
         },
-        img: {
-            type: String,
-        },
         email: {
             type: String,
             required: true,
@@ -20,22 +17,10 @@ const userSchema = new Schema(
         password: {
             type: String,
         },
-        SavedPosts: {
-            type: [String],
-            default: []
-        },
-        googleId: {
-            type: String,
-        },
         isLogin: {
             type: Boolean,
             default: false,
-        },
-        emailToken: {
-            type: String,
-        },
-
-
+        }
     },
     { timestamps: true } // Adds createdAt and updatedAt automatically
 );

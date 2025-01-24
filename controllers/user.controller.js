@@ -23,22 +23,13 @@ export const signup = async (req, res) => {
 
         // Hash password
         const hashedPassword = await bcryptjs.hash(password, 10);
-        // Generate a JWT token
-        const emailToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '2m' });
 
-        // Set cookie with the token
-        res.cookie("emailToken", emailToken, {
-            httpOnly: true,
-            secure: true,
-            maxAge: 3600000, // 1 hour
-        });
 
         // Create a new user instance
         const newUser = new User({
             username,
             email,
             password: hashedPassword,
-            emailToken,
             isVerified: false
         });
 
@@ -51,8 +42,7 @@ export const signup = async (req, res) => {
             newUser: {
                 _id: newUser._id,
                 username: newUser.username,
-                email: newUser.email,
-                emailToken
+                email: newUser.email
             },
         });
     } catch (error) {
@@ -74,7 +64,6 @@ export const signin = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
 
         // Check if the password is correct
         const isMatch = bcryptjs.compare(password, user.password);
